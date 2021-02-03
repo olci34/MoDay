@@ -13,14 +13,9 @@ class MoDay
     end
 
     def self.make_genre_movies(genre)
-        genre_movies = []
-        if genre.movies.empty?
-            movie_id_array = Scraper.scrape_movie_ids(genre)
-            genre_movies = movie_id_array.collect {|id| Api.get_movie_by_id(id)}
-        else
-            genre_movies = genre.movies
-        end
-        genre_movies
+        movie_id_array = Scraper.scrape_movie_ids(genre)
+        genre_movies = movie_id_array.collect {|id| Api.get_movie_by_id(id)}
+        genre.movies
     end
 
     def list_and_pick_genres
@@ -37,7 +32,7 @@ class MoDay
 
     def list_genre_movies(genre)
         puts "\nHere is #{genre.name} movies of the day."
-        movies = self.class.make_genre_movies(genre)
+        genre.movies.empty? ? movies = self.class.make_genre_movies(genre) : movies = genre.movies
         movies.each.with_index(1) {|movie, index| puts "#{index}. #{movie.title}."}
     end
 
