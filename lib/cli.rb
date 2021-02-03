@@ -14,6 +14,14 @@ class MoDay
             genres.each.with_index(1) {|genre, index| puts "#{index}. #{genre}"}
             input = gets.strip.to_i
         end
+        picked_genre = genre[input - 1]
+        self.list_genre_movies(picked_genre)
     end
+
+    def list_genre_movies(genre)
+        
+    end
+
+
 
 end
