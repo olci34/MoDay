@@ -12,6 +12,8 @@ class MoDay
         Genre.all
     end
 
+    
+
     def list_and_pick_genres
         Genre.all.empty? ? genres = self.class.make_genres : genres = Genre.all
         input = nil
