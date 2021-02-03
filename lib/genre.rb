@@ -12,4 +12,10 @@ class Genre
         @@all
     end
 
+    def movies
+        Movie.all.collect do |movie|
+            movie.genre_array.split(",").include?(self.name)
+        end
+    end
+
 end

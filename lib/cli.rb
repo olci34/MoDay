@@ -12,8 +12,6 @@ class MoDay
         Genre.all
     end
 
-    
-
     def list_and_pick_genres
         Genre.all.empty? ? genres = self.class.make_genres : genres = Genre.all
         input = nil
@@ -28,7 +26,7 @@ class MoDay
 
     def list_genre_movies(genre)
         puts "\nHere is #{genre.name} movies of the day."
-        #Lists movies
+        #List movies
     end
 
 end

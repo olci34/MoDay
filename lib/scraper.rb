@@ -18,7 +18,6 @@ class Scraper
         doc = Nokogiri::HTML(uri_html)
         movie_id_data = doc.css(".lister-item-header a")
         movie_id_array = movie_id_data.collect {|data| data.attributes["href"].value.split("/")[2]}
-        binding.pry
     end
 
 end
