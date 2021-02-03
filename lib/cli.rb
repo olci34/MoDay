@@ -30,12 +30,13 @@ class MoDay
     end
 
     def list_genre_movies(genre)
-        puts "\nHere is #{genre.name} movies of the day."
-        genre.movies.empty? ? movies = self.class.make_genre_movies(genre) : movies = genre.movies  
-        movies.sample(3).each.with_index(1) {|movie, index| puts "#{index}. #{movie.title}."}
+        puts "\nHere are the #{genre.name} movies of the day."
+        genre.movies.empty? ? movies = self.class.make_genre_movies(genre) : movies = genre.movies
+        listed_movies = movies.sample(3)
+        listed_movies.each.with_index(1) {|movie, index| puts "#{index}. #{movie.title}."}
         input = ""
         while !(1..3).include?(input.to_i) && !input.start_with?("starring","directedby") # ERROR Handling
-            puts "Enter the number of the movie for more details."
+            puts "\nEnter the number of the movie for more details."
             puts "Look for #{genre.name} movies of your favorite movie star by using \"starring\" followed by the movie star's full name."
             puts "Look for #{genre.name} movies of your favorite director by using \"directedby\" followed by the director's full name."
             input = gets.strip.downcase
@@ -45,18 +46,28 @@ class MoDay
             self.input_handler(entry: input, genre: genre, object: Star, attribute: "stars")
         elsif input.start_with?("directedby")
             self.input_handler(entry: input, genre: genre, object: Director, attribute: "director")
-            #TODO: Add if user picks a movie
+        else
+            self.display_movie(listed_movies[input.to_i - 1])
         end
     end
 
     def input_handler(entry:, genre:, object:, attribute:)
-        instance_name = entry.split(" ",2)[1].strip.split.map(&:capitalize).join(" ") 
-        instance_movies = genre.movies.select {|movie| movie.send("#{attribute}").include?(object.find_by_name(instance_name))}
+        instance_name = entry.split(" ",2)[1].strip.split.map(&:capitalize).join(" ")
+        instance = object.find_by_name(instance_name)
+        instance_movies = genre.movies.select {|movie| movie.send("#{attribute}").include?(instance)}
         if instance_movies.empty?
             puts "#{instance_name} does not have top rated #{genre.name} movies."
             self.list_genre_movies(genre)
         else 
-            instance_movies.each {|movie| puts movie.title}
+            puts "\nHere are the #{instance.name}'s top rated #{genre.name} movies."
+            instance_movies.each.with_index(1) {|movie, index| puts "#{index}. #{movie.title}"}
+            input = ""
+            while !(1..instance_movies.count).include?(input)
+                print "\nEnter the number of the movie for more details: "
+                input = gets.strip.to_i
+            end
+            self.display_movie(instance_movies[input - 1])
         end
     end
+
 end
