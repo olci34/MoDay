@@ -41,8 +41,8 @@ class MoDay
             input = gets.strip.downcase
         end
         if input.start_with?("starring")
-            star_name = input.split(" ",2)[1].strip.split.map(&:capitalize).join(" ") #TODO: Create Star object
-            star_movies = movies.select {|movie| movie.stars.include?(star_name)} #TODO: create #find_by_name method in Stars. 
+            star_name = input.split(" ",2)[1].strip.split.map(&:capitalize).join(" ") 
+            star_movies = movies.select {|movie| movie.stars.include?(Star.find_by_name(star_name))} #TODO: create #find_by_name method in Stars. 
             if star_movies.empty?
                  puts "#{star_name} does not have top rated #{genre.name} movies."
                  self.list_genre_movies(genre)
@@ -50,8 +50,8 @@ class MoDay
                 star_movies.each {|movie| puts movie.title}
             end
         elsif input.start_with?("directedby")
-            director_name = input.split(" ",2)[1].strip.split.map(&:capitalize).join(" ") #TODO: Create Director object
-            director_movies = movies.select {|movie| movie.director.include?(director_name)}
+            director_name = input.split(" ",2)[1].strip.split.map(&:capitalize).join(" ")
+            director_movies = movies.select {|movie| movie.director.include?(Director.find_by_name(director_name))}
             if director_movies.empty?
                  puts "#{director_name} does not have top rated #{genre.name} movies."
                  self.list_genre_movies(genre)
