@@ -10,4 +10,8 @@ class Star < Person
         @@all
     end
 
+    def movies
+        Movie.all.select {|movie| movie.stars.include?(self.name)}
+    end
+
 end

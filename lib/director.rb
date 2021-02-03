@@ -10,4 +10,7 @@ class Director < Person
         @@all
     end
 
+    def movies
+        Movie.all.select {|movie| movie.director == self.name}
+    end
 end
