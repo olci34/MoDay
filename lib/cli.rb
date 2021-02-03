@@ -37,7 +37,8 @@ class MoDay
 
     def list_genre_movies(genre)
         puts "\nHere is #{genre.name} movies of the day."
-        #List movies
+        movies = self.class.make_genre_movies(genre)
+        movies.each.with_index(1) {|movie, index| puts "#{index}. #{movie.title}."}
     end
 
 end
