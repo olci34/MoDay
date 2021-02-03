@@ -1,17 +1,12 @@
 class Movie
-    
-    attr_accessor :title, :year, :runtime, :genre_array, :director, :stars, :plot ,:imdbRating
+
     @@all = []
 
-    def intialize(title, year, runtime, genre_array, director, stars, plot ,imdbRating)
-        self.title = title
-        self.year = year
-        self.runtime = runtime
-        self.genre_array = genre_array
-        self.director = director
-        self.stars = stars
-        self.plot = plot
-        self.imdbRating = imdbRating
+    def initialize(movie_hash)
+        movie_hash.each do |key, value|
+            self.class.attr_accessor(key)
+            self.send("#{key}=", value)
+        end
         self.class.all << self
     end
 
