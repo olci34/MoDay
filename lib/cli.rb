@@ -40,25 +40,23 @@ class MoDay
             puts "Look for #{genre.name} movies of your favorite director by using \"directedby\" followed by the director's full name."
             input = gets.strip.downcase
         end
+
         if input.start_with?("starring")
-            star_name = input.split(" ",2)[1].strip.split.map(&:capitalize).join(" ") 
-            star_movies = movies.select {|movie| movie.stars.include?(Star.find_by_name(star_name))} #TODO: create #find_by_name method in Stars. 
-            if star_movies.empty?
-                 puts "#{star_name} does not have top rated #{genre.name} movies."
-                 self.list_genre_movies(genre)
-            else 
-                star_movies.each {|movie| puts movie.title}
-            end
+            self.input_handler(entry: input, genre: genre, object: Star, attribute: "stars")
         elsif input.start_with?("directedby")
-            director_name = input.split(" ",2)[1].strip.split.map(&:capitalize).join(" ")
-            director_movies = movies.select {|movie| movie.director.include?(Director.find_by_name(director_name))}
-            if director_movies.empty?
-                 puts "#{director_name} does not have top rated #{genre.name} movies."
-                 self.list_genre_movies(genre)
-            else 
-                director_movies.each {|movie| puts movie.title}
-            end
+            self.input_handler(entry: input, genre: genre, object: Director, attribute: "director")
+            #TODO: Add if user picks a movie
         end
     end
 
+    def input_handler(entry:, genre:, object:, attribute:)
+        instance_name = entry.split(" ",2)[1].strip.split.map(&:capitalize).join(" ") 
+        instance_movies = genre.movies.select {|movie| movie.send("#{attribute}").include?(object.find_by_name(instance_name))}
+        if instance_movies.empty?
+            puts "#{instance_name} does not have top rated #{genre.name} movies."
+            self.list_genre_movies(genre)
+        else 
+            instance_movies.each {|movie| puts movie.title}
+        end
+    end
 end
