@@ -12,6 +12,17 @@ class MoDay
         Genre.all
     end
 
+    def self.make_genre_movies(genre)
+        genre_movies = []
+        if genre.movies.empty?
+            movie_id_array = Scraper.scrape_movie_ids(genre)
+            genre_movies = movie_id_array.collect {|id| Api.get_movie_by_id(id)}
+        else
+            genre_movies = genre.movies
+        end
+        genre_movies
+    end
+
     def list_and_pick_genres
         Genre.all.empty? ? genres = self.class.make_genres : genres = Genre.all
         input = nil
