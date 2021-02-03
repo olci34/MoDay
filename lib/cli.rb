@@ -7,7 +7,7 @@ class MoDay
     end
 
     def list_and_pick_genres
-        genres = ["Action","Drama","Comedy","Documentary"] #TODO: Create Genre class
+        genres = Genre.all #TODO: Create Genre class
         input = nil
         while !(1..genres.count).include?(input) #ERROR Handling
             puts "Please pick a genre"
@@ -19,7 +19,7 @@ class MoDay
     end
 
     def list_genre_movies(genre)
-        
+
     end
 
 
