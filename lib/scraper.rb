@@ -11,8 +11,6 @@ class Scraper
         doc = Nokogiri::HTML(uri_html)
         genre_names_data = doc.css("li.subnav_item_main a").children
         genre_names = genre_names_data.collect {|data| data.text.strip}
-        binding.pry
     end
 
-    
 end

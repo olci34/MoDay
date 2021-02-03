@@ -6,22 +6,27 @@ class MoDay
         self.list_and_pick_genres
     end
 
+    def self.make_genres #Instantiates Genres by using scraped genre names and returns Genres.all array
+        genre_names = Scraper.scrape_genre_names
+        genre_names.each {|name| Genre.new(name)}
+        Genre.all
+    end
+
     def list_and_pick_genres
-        genres = Genre.all #TODO: Create Genre class
+        Genre.all.empty? ? genres = self.class.make_genres : genres = Genre.all
         input = nil
         while !(1..genres.count).include?(input) #ERROR Handling
             puts "Please pick a genre"
-            genres.each.with_index(1) {|genre, index| puts "#{index}. #{genre}"}
+            genres.each.with_index(1) {|genre, index| puts "#{index}. #{genre.name}"}
             input = gets.strip.to_i
         end
-        picked_genre = genre[input - 1]
+        picked_genre = genres[input - 1]
         self.list_genre_movies(picked_genre)
     end
 
     def list_genre_movies(genre)
-
+        puts "Here is #{genre.name} movies of the day."
+        #Lists movies
     end
-
-
 
 end
