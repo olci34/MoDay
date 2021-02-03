@@ -14,6 +14,5 @@ class Scraper
         binding.pry
     end
 
+    
 end
-
-Scraper.scrape_genre_names
