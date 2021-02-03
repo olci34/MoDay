@@ -14,7 +14,4 @@ class Movie
         @@all
     end
 
-    def movies
-        
-
 end
