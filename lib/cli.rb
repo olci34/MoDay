@@ -1,7 +1,7 @@
 class MoDay
 
     def greeting
-        puts "Welcome to MoDay! Here is the movie of the day."
+        puts "\n\nWelcome to MoDay! Here is the movie of the day.\n"
         #self.movie_of_the_day Displays a random movie
         self.list_and_pick_genres
     end
@@ -18,8 +18,8 @@ class MoDay
         Genre.all.empty? ? genres = self.class.make_genres : genres = Genre.all
         input = nil
         while !(1..genres.count).include?(input) #ERROR Handling
-            puts "Please pick a genre"
             genres.each.with_index(1) {|genre, index| puts "#{index}. #{genre.name}"}
+            print "\nPlease pick a genre: "
             input = gets.strip.to_i
         end
         picked_genre = genres[input - 1]
@@ -27,7 +27,7 @@ class MoDay
     end
 
     def list_genre_movies(genre)
-        puts "Here is #{genre.name} movies of the day."
+        puts "\nHere is #{genre.name} movies of the day."
         #Lists movies
     end
 

@@ -1,7 +1,3 @@
-require 'pry'
-require 'open-uri'
-require 'nokogiri'
-
 class Scraper
 
     GENRE_NAMES_URL = "https://www.imdb.com/chart/top/?ref_=nv_mv_250"
