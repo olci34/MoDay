@@ -3,7 +3,7 @@ class Star < Person
     @@all = []
     def initialize(name)
         super
-        self.class.all << self
+        self.class.all << self if !self.class.find_by_name(name) 
     end
 
     def self.all

@@ -2,7 +2,6 @@ require 'pry'
 require 'httparty'
 require 'open-uri'
 require 'nokogiri'
-require 'tty-screen'
 require 'tty-prompt'
 require 'tty-progressbar'
 

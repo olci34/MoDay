@@ -19,7 +19,7 @@ class MoDay
 
     def self.make_genre_movies(genre)
         movie_id_array = Scraper.scrape_movie_ids(genre)
-        bar = TTY::ProgressBar.new("#{genre.name} genre content is loading[:bar]", total: 30)
+        bar = TTY::ProgressBar.new("#{genre.name} genre content is loading[:bar]", total: movie_id_array.count / 2)
         genre_movies = movie_id_array.collect do |id|
             Api.get_movie_by_id(id)
             bar.advance
@@ -36,7 +36,8 @@ class MoDay
     end
 
     def list_genre_movies(genre)
-        genre.movies.empty? ? movies = self.class.make_genre_movies(genre) : movies = genre.movies
+        genre.movies.count < 40 ? movies = self.class.make_genre_movies(genre) : movies = genre.movies
+        binding.pry
         suggested_movies = movies.sample(3)
 
         selection = @prompt.select(@pastel.yellow("\n#{genre.name} Menu"), self.category_options(genre))
@@ -57,6 +58,8 @@ class MoDay
             listed_movie_titles = suggested_movies.map {|movie| movie.title}
             picked_movie = Movie.find_by_name(@prompt.select(@pastel.cyan("Pick a movie for more details"), listed_movie_titles))
             self.display_movie(picked_movie)
+        when self.category_options(genre)[3]
+            self.go_back
         end
     end
 
@@ -65,7 +68,7 @@ class MoDay
         instance = object.find_by_name(instance_name)
         instance_movies = genre.movies.select {|movie| movie.send("#{attribute}").include?(instance)}
         if instance_movies.empty?
-            puts "#{instance_name} does not have top rated #{genre.name} movies."
+            puts @pastel.red.italic("\n#{instance_name} does not have top rated #{genre.name} movies.")
             self.list_genre_movies(genre)
         else 
             movie_titles = instance_movies.map {|movie| movie.title}
@@ -87,11 +90,16 @@ class MoDay
         puts "#{@pastel.green.dark("Plot:")} #{movie.plot}"
     end
 
+    def go_back
+        self.list_and_pick_genres
+    end
+
     def category_options(genre)
         options = [
             "Search for your favorite movie star's #{genre.name} movies",
             "Search for your favorite director's #{genre.name} movies",
-            "See #{genre.name} movies of the day"
+            "See #{genre.name} movies of the day",
+            "#{@pastel.bright_red("<Back")}"
         ]
     end
 

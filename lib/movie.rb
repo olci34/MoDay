@@ -7,7 +7,7 @@ class Movie
             self.class.attr_accessor(key)
             self.send("#{key}=", value)
         end
-        self.class.all << self
+        self.class.all << self if !self.class.find_by_name(title)
     end
 
     def self.all
