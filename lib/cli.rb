@@ -70,4 +70,26 @@ class MoDay
         end
     end
 
+    def display_movie(movie)
+        puts "\n"
+        puts "#{movie.title.colorize(:light_blue)} (#{movie.year})"
+        puts "Director(s): #{movie.director[0].name}"
+        stars_name_list = movie.stars.collect {|star| star.name}
+        puts "Movie Stars: #{stars_name_list.join(", ")}\n"
+        puts "#{movie.runtime} | imdb Rating: #{movie.imdbRating}\n"
+        puts movie.plot
+    end
+
+    def logo
+        puts "
+        
+███╗   ███╗ ██████╗ ██████╗  █████╗ ██╗   ██╗
+████╗ ████║██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝
+██╔████╔██║██║   ██║██║  ██║███████║ ╚████╔╝ 
+██║╚██╔╝██║██║   ██║██║  ██║██╔══██║  ╚██╔╝  
+██║ ╚═╝ ██║╚██████╔╝██████╔╝██║  ██║   ██║   
+╚═╝     ╚═╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
+                                             
+".colorize(:light_green)
+    end
 end

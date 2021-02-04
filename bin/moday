@@ -3,4 +3,5 @@
 require_relative '../config/environment.rb'
 
 moday = MoDay.new
+moday.logo
 moday.greeting
