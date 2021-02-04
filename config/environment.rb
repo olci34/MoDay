@@ -3,6 +3,8 @@ require 'httparty'
 require 'open-uri'
 require 'nokogiri'
 require 'colorize'
+require 'tty-screen'
+require 'tty-prompt'
 
 require_relative '../lib/cli.rb'
 require_relative '../lib/scraper.rb'

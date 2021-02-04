@@ -19,54 +19,46 @@ class MoDay
     end
 
     def list_and_pick_genres
-        Genre.all.empty? ? genres = self.class.make_genres : genres = Genre.all 
-        input = nil
-        while !(1..genres.count).include?(input) #ERROR Handling
-            genres.each.with_index(1) {|genre, index| puts "#{index}. #{genre.name}"}
-            print "\nPlease pick a genre: "
-            input = gets.strip.to_i
-        end
-        self.list_genre_movies(genres[input - 1])
+        Genre.all.empty? ? genres = self.class.make_genres : genres = Genre.all  
+        options = genres.map {|genre| genre.name}
+        picked_genre = Genre.find_by_name(TTY::Prompt.new.select("Please pick a genre:", options))
+        self.list_genre_movies(picked_genre)
     end
 
     def list_genre_movies(genre)
-        puts "\nHere are the #{genre.name} movies of the day."
+        prompt = TTY::Prompt.new
+        puts "\n#{genre.name} menu\n"
         genre.movies.empty? ? movies = self.class.make_genre_movies(genre) : movies = genre.movies
-        listed_movies = movies.sample(3)
-        listed_movies.each.with_index(1) {|movie, index| puts "#{index}. #{movie.title}."}
-        input = ""
-        while !(1..3).include?(input.to_i) && !input.start_with?("starring","directedby") # ERROR Handling
-            puts "\nEnter the number of the movie for more details."
-            puts "Look for #{genre.name} movies of your favorite movie star by using \"starring\" followed by the movie star's full name."
-            puts "Look for #{genre.name} movies of your favorite director by using \"directedby\" followed by the director's full name."
-            input = gets.strip.downcase
-        end
+        suggested_movies = movies.sample(3)
 
-        if input.start_with?("starring")
+        selection = prompt.select("Please pick an option", self.category_options(genre))
+        case selection
+        when self.category_options(genre)[0]
+            puts "Please enter the move star's full name: #{input = gets.strip}"
             self.input_handler(entry: input, genre: genre, object: Star, attribute: "stars")
-        elsif input.start_with?("directedby")
+        when self.category_options(genre)[1]
+            puts "Please enter the directors's full name: #{input = gets.strip}"
             self.input_handler(entry: input, genre: genre, object: Director, attribute: "director")
-        else
-            self.display_movie(listed_movies[input.to_i - 1])
+        when self.category_options(genre)[2]
+            listed_movie_titles = suggested_movies.map {|movie| movie.title}
+            picked_movie = Movie.find_by_name(prompt.select("Pick a movie for more details", listed_movie_titles))
+            self.display_movie(picked_movie)
         end
     end
 
     def input_handler(entry:, genre:, object:, attribute:)
-        instance_name = entry.split(" ",2)[1].strip.split.map(&:capitalize).join(" ")
+        instance_name = entry.strip.split.map(&:capitalize).join(" ")
         instance = object.find_by_name(instance_name)
         instance_movies = genre.movies.select {|movie| movie.send("#{attribute}").include?(instance)}
         if instance_movies.empty?
             puts "#{instance_name} does not have top rated #{genre.name} movies."
             self.list_genre_movies(genre)
         else 
+            movie_titles = instance_movies.map {|movie| movie.title}
             puts "\nHere are the #{instance.name}'s top rated #{genre.name} movies."
-            instance_movies.each.with_index(1) {|movie, index| puts "#{index}. #{movie.title}"}
-            input = ""
-            while !(1..instance_movies.count).include?(input)
-                print "\nEnter the number of the movie for more details: "
-                input = gets.strip.to_i
-            end
-            self.display_movie(instance_movies[input - 1])
+            picked_movie_name = TTY::Prompt.new.select("Pick a movie for details:", movie_titles)
+            picked_movie = Movie.find_by_name(picked_movie_name)
+            self.display_movie(picked_movie)
         end
     end
 
@@ -79,6 +71,15 @@ class MoDay
         puts "#{movie.runtime} | imdb Rating: #{movie.imdbRating}\n"
         puts movie.plot
     end
+
+    def category_options(genre)
+        options = [
+            "Search for your favorite movie star's #{genre.name} movies",
+            "Search for your favorite director's #{genre.name} movies",
+            "See #{genre.name} movies of the day"
+        ]
+    end
+
 
     def logo
         puts "
