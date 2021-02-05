@@ -17,5 +17,8 @@ class Movie
     def self.find_by_name(name)
         self.all.find {|movie| movie.title == name}
     end
-
+    
+    def self.find_by_imdbID(id)
+        Movie.all.find {|movie| movie.imdbID == id}
+    end
 end

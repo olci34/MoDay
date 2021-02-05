@@ -3,7 +3,7 @@ class MoDay
     def initialize
         @pastel = Pastel.new
         @prompt = TTY::Prompt.new
-        @data_source = {}
+        @data_source = {} # every element's key is a Genre and value Movie array
         @current_genre = ""
     end
 
@@ -12,44 +12,40 @@ class MoDay
         self.list_and_pick_genres
     end
 
-    def make_genres #Instantiates Genres by using scraped genre names and returns Genres.all array
+    def make_genres # Scrapes genre names and instantiates new Genres
         genre_names = Scraper.scrape_genre_names
         genre_names.each {|name| Genre.new(name)}
         Genre.all
     end
 
-    def make_genre_movies(genre)
-        movie_id_array = []
-        if @data_source[genre.name]
-            movie_id_array = @data_source[genre.name]
-        else
-            movie_id_array = Scraper.scrape_movie_ids(genre)
-            @data_source[genre.name] = movie_id_array
-        end
+    def make_genre_movies(genre) # Avoids scraping the passed genre page by storing movie ids, makes new Movies from stored movie ids
+        stored_ids = @data_source[genre].collect {|m| m.imdbID} if @data_source[genre]
+        movie_id_array = stored_ids || Scraper.scrape_movie_ids(genre) #Avoids scraping same page
         bar = TTY::ProgressBar.new("#{genre.name} genre content is loading[:bar]", total: movie_id_array.count / 2)
         genre_movies = movie_id_array.collect do |id|
-            Api.get_movie_by_id(id)
             bar.advance
+            Api.get_movie_by_id(id) # Returns already existed Movie or makes new Movie.
         end
+        @data_source[genre] = genre_movies if !stored_ids # Stores scraped data if it hasn't stored before
         genre.movies
     end
 
-    def list_and_pick_genres
+    def list_and_pick_genres # Finds already existed genre list or makes a new Genre list
         Genre.all.empty? ? genres = self.make_genres : genres = Genre.all  
         options = genres.map {|genre| genre.name}
         picked_genre = Genre.find_by_name(@prompt.select(@pastel.cyan("\nPlease pick a genre:"), options))
         puts "\n"
-        @current_genre = picked_genre
+        @current_genre = picked_genre # Assigns current_genre variable to picked genre in order to use it as an argument for needed methods.(Had to keep track because of <Back button.)
         self.genre_menu(picked_genre)
     end
 
-    def genre_menu(genre)
-        fetched_movies = self.make_genre_movies(genre)
+    def genre_menu(genre) # Lists selected genre menu options
+        self.make_genre_movies(genre)
         selection = @prompt.select(@pastel.yellow("\n#{genre.name} Menu"), self.genre_menu_options(genre))
-        self.genre_menu_handler(selection: selection, genre: genre, fetched_movies: fetched_movies)
+        self.genre_menu_handler(selection: selection, genre: genre)
     end
 
-    def genre_menu_handler(selection:, genre:, fetched_movies:)
+    def genre_menu_handler(selection:, genre:)
         menu = self.genre_menu_options(genre)
         case selection
         when menu[0]
@@ -57,7 +53,7 @@ class MoDay
         when menu[1]
             self.input_handler(genre: genre, object: Director, attribute: "director")
         when menu[2]
-            self.suggest_genre_movies(genre, fetched_movies)
+            self.suggest_genre_movies(genre)
         when menu[3]
             self.list_and_pick_genres
         end
@@ -102,8 +98,8 @@ class MoDay
         !picked_item ? self.genre_menu(genre) : self.display_movie(picked_item)
     end
 
-    def suggest_genre_movies(genre, fetched_movies)
-        suggested_movies = fetched_movies.sample(3)
+    def suggest_genre_movies(genre)
+        suggested_movies = @data_source[genre].sample(3)
         listed_movie_titles = suggested_movies.map {|movie| movie.title} << "#{@pastel.bright_red("<Back")}" 
         picked_movie = Movie.find_by_name(@prompt.select(@pastel.cyan("Pick a movie for more details"), listed_movie_titles))
         self.page_navigation(picked_movie, genre)
