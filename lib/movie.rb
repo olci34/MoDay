@@ -19,7 +19,7 @@ class Movie
     end
 
     def stars_name
-        movie.stars.collect {|star| star.name}.join(", ")
+        self.stars.collect {|star| star.name}.join(", ")
     end
 
     def self.find_by_name(name)

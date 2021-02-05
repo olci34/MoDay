@@ -63,7 +63,7 @@ class MoDay
         print @pastel.cyan("Please enter the movie #{object.name.downcase}'s full name: ")
         instance_name = gets.strip.split.map(&:capitalize).join(" ")
         instance = object.find_by_name(instance_name)
-        instance_movies = genre.movies.select {|movie| movie.send("#{attribute}").include?(instance)} #TODO: create find_person_movies method in Genre
+        instance_movies = genre.movies.select {|movie| movie.send("#{attribute}").include?(instance)}
         if instance_movies.empty?
             puts @pastel.red.italic("\n#{instance_name} does not have top rated #{genre.name} movies.")
             self.page_navigation
