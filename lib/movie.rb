@@ -14,10 +14,18 @@ class Movie
         @@all
     end
 
+    def directors_names
+        self.director.collect {|d| d.name}.join(", ")
+    end
+
+    def stars_name
+        movie.stars.collect {|star| star.name}.join(", ")
+    end
+
     def self.find_by_name(name)
         self.all.find {|movie| movie.title == name}
     end
-    
+
     def self.find_by_imdbID(id)
         Movie.all.find {|movie| movie.imdbID == id}
     end

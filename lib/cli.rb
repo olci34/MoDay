@@ -27,7 +27,7 @@ class MoDay
             Api.get_movie_by_id(id) # Returns already existed Movie or makes new Movie.
         end
         @data_source[genre] = genre_movies if !stored_ids # Stores scraped data if it hasn't stored before
-        genre.movies
+        genre.movies 
     end
 
     def list_and_pick_genres # Finds already existed genre list or makes a new Genre list
@@ -83,9 +83,8 @@ class MoDay
     def display_movie(movie)
         puts "\n"
         puts "#{@pastel.green.bold(movie.title)} (#{movie.year})"
-        puts "#{@pastel.green.dark("Director(s)")}: #{movie.director[0].name}"
-        stars_name_list = movie.stars.collect {|star| star.name}
-        puts "#{@pastel.green.dark("Movie Stars:")} #{stars_name_list.join(", ")}\n"
+        puts "#{@pastel.green.dark("Director(s)")}: #{movie.directors_names}"
+        puts "#{@pastel.green.dark("Movie Stars:")} #{movie.stars_name}\n"
         puts "#{@pastel.green.dark("Runtime:")} #{movie.runtime}"
         puts "#{@pastel.green.dark("Imdb Rating:")} #{movie.imdbRating}\n"
         puts "#{@pastel.green.dark("Plot:")} #{movie.plot}"
