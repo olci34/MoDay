@@ -1,14 +1,14 @@
-#MoDay
+# MoDay
 
 MoDay is a command line app that helps you pick a movie when you feel lost in the content ocean.
 It simply narrows the movie options for you based on genre, your favorite movie star or director.
 
-##Install
+## Installation
 
 After downloading, open your terminal and change the directory to MoDay directory.
 Run `ruby bin/moday` .
 
-##Usage
+## Usage
 
 It is pretty simple and quick.
 
