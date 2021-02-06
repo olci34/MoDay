@@ -21,6 +21,8 @@ First option helps you to find your favorite movie star's top rated genre movies
 Second option helps you to find your favorite director's top rated genre movies.
 Third option gives you suggested movies of your genre choice.
 
+![](selection.gif)
+
 
 In order to navigate to back menu, select *<Back* option and to exit the program select *Exit.* option.
 
