@@ -56,6 +56,8 @@ class MoDay
             self.suggest_genre_movies(genre)
         when menu[3]
             self.list_and_pick_genres
+        when menu[4]
+            abort("Bye fam")
         end
     end
 
@@ -90,7 +92,7 @@ class MoDay
         puts "#{@pastel.green.dark("Plot:")} #{movie.plot}"
         choices = ["#{@pastel.bright_red("<Back")}", "#{@pastel.bright_green.bold("Watch>")}"]
         selection = @prompt.select("\n", choices)
-        selection == choices[0] ? self.page_navigation : exit
+        selection == choices[0] ? self.page_navigation : abort("Good pick fam!")
     end
 
     def page_navigation(picked_item = nil, genre = @current_genre)
@@ -99,9 +101,14 @@ class MoDay
 
     def suggest_genre_movies(genre)
         suggested_movies = @data_source[genre].sample(3)
-        listed_movie_titles = suggested_movies.map {|movie| movie.title} << "#{@pastel.bright_red("<Back")}" 
-        picked_movie = Movie.find_by_name(@prompt.select(@pastel.cyan("Pick a movie for more details"), listed_movie_titles))
-        self.page_navigation(picked_movie, genre)
+        listed_movie_titles = suggested_movies.map {|movie| movie.title} << ["#{@pastel.bright_red("<Back")}", "#{@pastel.bright_yellow("Exit.")}"]
+        selection = @prompt.select(@pastel.cyan("Pick a movie for more details"), listed_movie_titles)
+        picked_movie = Movie.find_by_name(selection)
+        if selection || selection == listed_movie_titles[-2]
+            self.page_navigation(picked_movie, genre)
+        else
+            abort("Bye fam")
+        end
     end
 
     def genre_menu_options(genre)
@@ -109,7 +116,8 @@ class MoDay
             "Search for your favorite movie star's #{genre.name} movies",
             "Search for your favorite director's #{genre.name} movies",
             "See #{genre.name} movies of the day",
-            "#{@pastel.bright_red("<Back")}"
+            "#{@pastel.bright_red("<Back")}",
+            "#{@pastel.bright_yellow("Exit.")}"
         ]
     end
 
