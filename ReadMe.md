@@ -12,7 +12,7 @@ Run `ruby bin/moday` .
 
 It is pretty simple and quick.
 
-First list you will is the genre list. Change the selector by using your up and down arrows and press return for your selection.
+First list you will see is the genre list. Change the selector by using your up and down arrows and press return for your selection.
 
 ![](genremenu.gif)
 
