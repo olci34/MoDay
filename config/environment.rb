@@ -14,4 +14,3 @@ require_relative '../lib/concerns/findable.rb'
 require_relative '../lib/person.rb'
 require_relative '../lib/star.rb'
 require_relative '../lib/director.rb'
-

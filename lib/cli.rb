@@ -24,10 +24,14 @@ class MoDay
         bar = TTY::ProgressBar.new("#{genre.name} genre content is loading[:bar]", total: movie_id_array.count / 2)
         genre_movies = movie_id_array.collect do |id|
             bar.advance
-            Api.get_movie_by_id(id) # Returns already existed Movie or makes new Movie.
+            Api.get_movie_by_id(id)
         end
+        if genre_movies.find {|x| x == nil}
+            prompt.warn("Something went wrong")
+        else
         @data_source[genre] = genre_movies if !stored_ids # Stores scraped data if it hasn't stored before
         genre.movies 
+        end
     end
 
     def list_and_pick_genres # Finds already existed genre list or makes a new Genre list
