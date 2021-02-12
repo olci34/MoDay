@@ -8,7 +8,7 @@ It simply narrows the movie options for you based on genre, your favorite movie 
 After downloading, open your terminal and change the directory to MoDay directory.
 Run as following:
 `bundle install`
-`ruby bin/moday` .
+`bin/moday`
 
 ## Usage
 
