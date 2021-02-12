@@ -1,7 +1,6 @@
 class Movie
 
     @@all = []
-
     def initialize(movie_hash)
         movie_hash.each do |key, value|
             self.class.attr_accessor(key)
@@ -28,5 +27,9 @@ class Movie
 
     def self.find_by_imdbID(id)
         Movie.all.find {|movie| movie.imdbID == id}
+    end
+
+    def self.sort_by_name
+        sorted = Movie.all.sort {|movie1, movie2| movie1.title <=> movie2.title}
     end
 end
