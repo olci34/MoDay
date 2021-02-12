@@ -3,13 +3,22 @@ class MoDay
     def initialize
         @pastel = Pastel.new
         @prompt = TTY::Prompt.new
-        @data_source = {} # every element's key is a Genre and value is Movie array
+        @data_source = {} # every element's key is a Genre object and value is Movie object array
         @current_genre = ""
     end
 
     def greeting
         puts "\n\nWelcome to MoDay!"
         self.list_and_pick_genres
+    end
+
+    def list_and_pick_genres # Finds already existed genre list or makes a new Genre list
+        Genre.all.empty? ? genres = self.make_genres : genres = Genre.all  
+        options = genres.map {|genre| genre.name}
+        picked_genre = Genre.find_by_name(@prompt.select(@pastel.cyan("\nPlease pick a genre:"), options))
+        puts "\n"
+        @current_genre = picked_genre # Assigns current_genre variable to picked genre in order to use it as an argument for needed methods.(Had to keep track because of <Back button.)
+        self.genre_menu(picked_genre)
     end
 
     def make_genres # Scrapes genre names and instantiates new Genres
@@ -23,7 +32,7 @@ class MoDay
         movie_id_array = stored_ids || Scraper.scrape_movie_ids(genre) #Avoids scraping same page
         bar = TTY::ProgressBar.new("#{genre.name} genre content is loading[:bar]", total: movie_id_array.count / 2)
         genre_movies = movie_id_array.collect do |id|
-            bar.advance
+            bar.advance if !stored_ids
             Api.get_movie_by_id(id)
         end
         if genre_movies.find {|x| x == nil}
@@ -32,15 +41,6 @@ class MoDay
         @data_source[genre] = genre_movies if !stored_ids # Stores scraped data if it hasn't stored before
         genre.movies 
         end
-    end
-
-    def list_and_pick_genres # Finds already existed genre list or makes a new Genre list
-        Genre.all.empty? ? genres = self.make_genres : genres = Genre.all  
-        options = genres.map {|genre| genre.name}
-        picked_genre = Genre.find_by_name(@prompt.select(@pastel.cyan("\nPlease pick a genre:"), options))
-        puts "\n"
-        @current_genre = picked_genre # Assigns current_genre variable to picked genre in order to use it as an argument for needed methods.(Had to keep track because of <Back button.)
-        self.genre_menu(picked_genre)
     end
 
     def genre_menu(genre) # Lists selected genre menu options
