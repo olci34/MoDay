@@ -5,7 +5,7 @@ class Api
     def self.get_movie_by_id(id)
         movie = Movie.find_by_imdbID(id)
         if !movie #Avoids requesting API on already existed movies.
-            url = "https://www.omdbapi.com/?i=#{id}&apikey=#{@@api_key}j"
+            url = "https://www.omdbapi.com/?i=#{id}&apikey=#{@@api_key}"
             response = HTTParty.get(url)
             if response["Error"]    # API ERROR HANDLING
                 abort("Something went wrong: #{response["Error"]}")

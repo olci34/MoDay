@@ -3,7 +3,7 @@ class MoDay
     def initialize
         @pastel = Pastel.new
         @prompt = TTY::Prompt.new
-        @data_source = {} # every element's key is a Genre and value Movie array
+        @data_source = {} # every element's key is a Genre and value is Movie array
         @current_genre = ""
     end
 
