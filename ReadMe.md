@@ -18,7 +18,7 @@ First list you will see is the genre list. Change the selector by using your up 
 
 ![Alt Text](https://media.giphy.com/media/FGQ8XOUUDfyPGQYXDF/giphy.gif)
 
-Second list is genre menu.  
+Second list is the genre menu.  
 First option helps you to find your favorite movie star's top rated genre movies.  
 Second option helps you to find your favorite director's top rated genre movies.  
 Third option gives you suggested movies of your genre choice.  
